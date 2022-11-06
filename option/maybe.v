@@ -1,4 +1,4 @@
-module main
+module option
 
 pub struct Noth {}
 
@@ -135,6 +135,16 @@ pub fn (m Maybe<T>) filter<T>(predicate fn (v T) bool) Maybe<T> {
 }
 
 /// Utils methods
+pub fn (m Maybe<T>) native<T>() ?T {
+	return match m {
+		Noth {
+			none
+		}
+		T {
+			m
+		}
+	}
+}
 [inline]
 pub fn (m Maybe<T>) clone<T>() Maybe<T> {
 	return match m {

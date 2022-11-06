@@ -1,4 +1,4 @@
-module main
+module result
 
 pub struct Ok<T> {
 	v &T
