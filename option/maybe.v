@@ -21,7 +21,7 @@ pub fn some<T>(v T) Maybe<T> {
 }
 
 pub fn noth<T>() Maybe<T> {
-	return Maybe<T>(noth_c)
+	return Maybe<T>(option.noth_c)
 }
 
 [inline]
@@ -60,7 +60,7 @@ pub fn (m Maybe<T>) unwrap_or<T>(noth_value T) T {
 [inline]
 pub fn (m Maybe<T>) and<T>(m2 Maybe<T>) Maybe<T> {
 	return match m {
-		Noth { noth_c }
+		Noth { option.noth_c }
 		T { m2 }
 	}
 }
@@ -68,7 +68,7 @@ pub fn (m Maybe<T>) and<T>(m2 Maybe<T>) Maybe<T> {
 [inline]
 pub fn (m Maybe<T>) and_then<T>(f fn (v T) Maybe<T>) Maybe<T> {
 	return match m {
-		Noth { noth_c }
+		Noth { option.noth_c }
 		T { f(m) }
 	}
 }
@@ -78,7 +78,7 @@ pub fn (m Maybe<T>) @or<T>(m2 Maybe<T>) Maybe<T> {
 	return match m {
 		Noth {
 			match m2 {
-				Noth { noth_c }
+				Noth { option.noth_c }
 				T { m2 }
 			}
 		}
@@ -99,7 +99,7 @@ pub fn (m Maybe<T>) or_else<T>(f fn () Maybe<T>) Maybe<T> {
 [inline]
 pub fn (m Maybe<T>) xor<T>(m2 Maybe<T>) Maybe<T> {
 	if (m is Noth && m2 is Noth) || (m is T && m2 is T) {
-		return noth_c
+		return option.noth_c
 	}
 	if m2 is Noth {
 		return m
@@ -123,11 +123,11 @@ pub fn (m Maybe<T>) xor<T>(m2 Maybe<T>) Maybe<T> {
 pub fn (m Maybe<T>) filter<T>(predicate fn (v T) bool) Maybe<T> {
 	match m {
 		Noth {
-			return noth_c
+			return option.noth_c
 		}
 		T {
 			if !predicate(m) {
-				return noth_c
+				return option.noth_c
 			}
 			return some<T>(m)
 		}
@@ -137,19 +137,16 @@ pub fn (m Maybe<T>) filter<T>(predicate fn (v T) bool) Maybe<T> {
 /// Utils methods
 pub fn (m Maybe<T>) native<T>() ?T {
 	return match m {
-		Noth {
-			none
-		}
-		T {
-			m
-		}
+		Noth { none }
+		T { m }
 	}
 }
+
 [inline]
 pub fn (m Maybe<T>) clone<T>() Maybe<T> {
 	return match m {
 		Noth {
-			noth_c
+			option.noth_c
 		}
 		T {
 			// this unsafe block is to allow the cloning of the value without mutability

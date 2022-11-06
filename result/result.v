@@ -158,7 +158,7 @@ pub fn (r Result<T, E>) or_else<T, E>(f fn (v E) Result<T, E>) Result<T, E> {
 
 [inline; unsafe]
 pub fn (mut r Result<T, E>) redefine<T, E>(new_result Result<T, E>) {
-	r = new_result//.clone()
+	r = new_result //.clone()
 }
 
 [inline; unsafe]
