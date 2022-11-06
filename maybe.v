@@ -1,7 +1,8 @@
 module main
 
 pub struct Noth {}
-const noth_c = Noth {}
+
+const noth_c = Noth{}
 
 pub type Maybe<T> = Noth | T
 
@@ -148,25 +149,25 @@ pub fn (m Maybe<T>) clone<T>() Maybe<T> {
 	}
 }
 
-[inline]
-pub fn (m Maybe<T>) as_ref<T>() Maybe<&T> {
-	return match m {
-		Noth {
-			noth_c
-		}
-		T {
-			mut ref := unsafe { &m }
-			some<&T>(ref)
-		}
-	}
-}
+// [inline]
+// pub fn (m &Maybe<T>) as_ref<T>() Maybe<&T> {
+// 	return match m {
+// 		Noth {
+// 			noth_c
+// 		}
+// 		T {
+// 			mut ref := unsafe { &m }
+// 			some<&T>(ref)
+// 		}
+// 	}
+// }
 
-[inline]
+[inline; unsafe]
 pub fn (mut m Maybe<T>) redefine<T>(new_maybe Maybe<T>) {
 	m = new_maybe.clone()
 }
 
-[inline]
+[inline; unsafe]
 pub fn (mut m Maybe<T>) replace<T>(new_value T) {
 	m = new_value
 }
