@@ -36,3 +36,7 @@ pub fn (v Vec<T>) get(i u64) Maybe<T> {
 	}
 	return some<T>(unsafe{ v.arr[i] })
 }
+
+pub fn (v Vec<T>) iter() Iter<T> {
+	return from_iterable<T>(v)
+}
