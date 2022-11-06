@@ -1,6 +1,7 @@
 module main
 
 pub struct Noth {}
+const noth_c = Noth {}
 
 pub type Maybe<T> = Noth | T
 
@@ -19,7 +20,7 @@ pub fn some<T>(v T) Maybe<T> {
 }
 
 pub fn noth<T>() Maybe<T> {
-	return Maybe<T>(Noth{})
+	return Maybe<T>(noth_c)
 }
 
 [inline]
@@ -58,7 +59,7 @@ pub fn (m Maybe<T>) unwrap_or<T>(noth_value T) T {
 [inline]
 pub fn (m Maybe<T>) and<T>(m2 Maybe<T>) Maybe<T> {
 	return match m {
-		Noth { Noth{} }
+		Noth { noth_c }
 		T { m2 }
 	}
 }
@@ -66,7 +67,7 @@ pub fn (m Maybe<T>) and<T>(m2 Maybe<T>) Maybe<T> {
 [inline]
 pub fn (m Maybe<T>) and_then<T>(f fn (v T) Maybe<T>) Maybe<T> {
 	return match m {
-		Noth { Noth{} }
+		Noth { noth_c }
 		T { f(m) }
 	}
 }
@@ -76,7 +77,7 @@ pub fn (m Maybe<T>) @or<T>(m2 Maybe<T>) Maybe<T> {
 	return match m {
 		Noth {
 			match m2 {
-				Noth { Noth{} }
+				Noth { noth_c }
 				T { m2 }
 			}
 		}
@@ -97,7 +98,7 @@ pub fn (m Maybe<T>) or_else<T>(f fn () Maybe<T>) Maybe<T> {
 [inline]
 pub fn (m Maybe<T>) xor<T>(m2 Maybe<T>) Maybe<T> {
 	if (m is Noth && m2 is Noth) || (m is T && m2 is T) {
-		return Noth{}
+		return noth_c
 	}
 	if m2 is Noth {
 		return m
@@ -121,11 +122,11 @@ pub fn (m Maybe<T>) xor<T>(m2 Maybe<T>) Maybe<T> {
 pub fn (m Maybe<T>) filter<T>(predicate fn (v T) bool) Maybe<T> {
 	match m {
 		Noth {
-			return Noth{}
+			return noth_c
 		}
 		T {
 			if !predicate(m) {
-				return Noth{}
+				return noth_c
 			}
 			return some<T>(m)
 		}
@@ -137,7 +138,7 @@ pub fn (m Maybe<T>) filter<T>(predicate fn (v T) bool) Maybe<T> {
 pub fn (m Maybe<T>) clone<T>() Maybe<T> {
 	return match m {
 		Noth {
-			Noth{}
+			noth_c
 		}
 		T {
 			// this unsafe block is to allow the cloning of the value without mutability
@@ -148,14 +149,24 @@ pub fn (m Maybe<T>) clone<T>() Maybe<T> {
 }
 
 [inline]
-pub fn (m Maybe<T>) as_ref<T>() Maybe<T> {
+pub fn (m Maybe<T>) as_ref<T>() Maybe<&T> {
 	return match m {
 		Noth {
-			Noth{}
+			noth_c
 		}
 		T {
 			mut ref := unsafe { &m }
 			some<&T>(ref)
 		}
 	}
+}
+
+[inline]
+pub fn (mut m Maybe<T>) redefine<T>(new_maybe Maybe<T>) {
+	m = new_maybe.clone()
+}
+
+[inline]
+pub fn (mut m Maybe<T>) replace<T>(new_value T) {
+	m = new_value
 }
