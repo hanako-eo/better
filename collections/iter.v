@@ -7,25 +7,26 @@ pub interface Iterable<T> {
 	get(i u64) Maybe<T>
 }
 
+[manualfree]
 pub struct Iter<T> {
 	iter Iterable<T>
 mut:
-	index u64
+	i u64
 }
 
-pub fn from_iterable<T>(i Iterable<T>) Iter<T> {
+pub fn from_iterable<T>(iterable Iterable<T>) Iter<T> {
 	return Iter<T>{
-		index: 0
-		iter: i
+		iter: iterable
+		i: 0
 	}
 }
 
-fn (mut i Iter<T>) next() ?T {
+fn (mut iterator Iter<T>) next() ?T {
 	defer {
-		i.index++
-		if i.index == i.iter.len {
-			unsafe { free(i) }
+		iterator.i++
+		if iterator.i == iterator.iter.len {
+			unsafe { free(iterator) }
 		}
 	}
-	return i.iter.get(i.index).native()
+	return iterator.iter.get(iterator.i).native()
 }
