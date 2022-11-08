@@ -28,3 +28,8 @@ pub fn copy<T>(ptr &T, from &T, n u64) {
 pub fn set<T>(ptr &T, val T, n u64) {
 	C.memset(ptr, val, n)
 }
+
+[inline; unsafe]
+pub fn reset<T>(ptr &T, len u64) {
+	set(ptr, 0, sizeof(T) * math.max(len, 1))
+}
