@@ -6,15 +6,14 @@ const noth_c = Noth{}
 
 pub type Maybe<T> = Noth | T
 
-// wait a correction of this issue https://github.com/vlang/v/issues/16340
-// pub fn (m Maybe<T>) str<T>() string {
-// 	return if m is T {
-// 		x := m as T
-// 		'Some($x)'
-// 	} else {
-// 		'Noth'
-// 	}
-// }
+pub fn (m Maybe<T>) str<T>() string {
+	return if m is T {
+		x := m as T
+		'Some($x)'
+	} else {
+		'Noth'
+	}
+}
 
 pub fn some<T>(v T) Maybe<T> {
 	return Maybe<T>(v)

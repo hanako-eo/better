@@ -16,6 +16,10 @@ pub mut:
 	cap  u32
 }
 
+pub fn (v Vec<T>) str() string {
+	return str_iter<T>(v, 'Vec<${typeof(*v.data).name}>{', '}')
+}
+
 pub fn new_vector<T>() Vec<T> {
 	return new_vector_with_cap<T>(0)
 }

@@ -7,6 +7,17 @@ pub interface Iterable<T> {
 	get(i u32) Maybe<T>
 }
 
+pub fn str_iter<T>(iter Iterable<T>, prefix string, suffix string) string {
+	mut str := prefix
+	for x, i := iter.get(0), u32(1); x.is_some(); x = iter.get(i++) {
+		str += '$x.unwrap()'
+		if i < iter.len {
+			str += ', '
+		}
+	}
+	return str + suffix
+}
+
 [manualfree]
 pub struct Iter<T> {
 	iter Iterable<T>

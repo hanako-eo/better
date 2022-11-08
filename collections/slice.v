@@ -6,13 +6,17 @@ import option { Maybe, noth, some }
 [params]
 pub struct SliceParams {
 	start u32
-	end u32
+	end   u32
 }
 
 pub struct Slice<T> {
 pub:
 	data &T
-	len u32
+	len  u32
+}
+
+pub fn (s Slice<T>) str() string {
+	return str_iter<T>(s, '&{', '}')
 }
 
 pub fn (s Slice<T>) get(i u32) Maybe<T> {

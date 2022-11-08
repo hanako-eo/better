@@ -18,13 +18,12 @@ fn (err Err<T>) str() string {
 
 pub type Result<T, E> = Err<E> | Ok<T>
 
-// wait a correction of this issue https://github.com/vlang/v/issues/16340
-// pub fn (r Result<T, E>) str<T, E>() string {
-// 	return match r {
-// 		Ok<T> { r.str() }
-// 		Err<E> { r.str() }
-// 	}
-// }
+pub fn (r Result<T, E>) str<T, E>() string {
+	return match r {
+		Ok<T> { r.str() }
+		Err<E> { r.str() }
+	}
+}
 
 pub fn ok<T, E>(v T) Result<T, E> {
 	return Result<T, E>(Ok<T>{
