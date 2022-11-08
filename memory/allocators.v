@@ -1,5 +1,7 @@
 module memory
 
+import math
+
 [inline; unsafe]
 pub fn alloc<T>(n_bytes u64) &T {
 	sizeof_type := sizeof(T)
@@ -25,11 +27,18 @@ pub fn copy<T>(ptr &T, from &T, n u64) {
 }
 
 [inline; unsafe]
-pub fn set<T>(ptr &T, val T, n u64) {
+pub fn set<T>(ptr &T, val u64, n u64) {
 	C.memset(ptr, val, n)
 }
 
 [inline; unsafe]
-pub fn reset<T>(ptr &T, len u64) {
-	set(ptr, 0, sizeof(T) * math.max(len, 1))
+pub fn uninit<T>(ptr &T, len u64) {
+	C.memset(ptr, 0, sizeof(T) * math.max(len, 1))
+}
+
+[inline; unsafe]
+pub fn zeroed<T>() T {
+	ptr := alloc<T>(1)
+	uninit(ptr, 1)
+	return *ptr
 }
