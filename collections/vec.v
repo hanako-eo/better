@@ -1,5 +1,6 @@
 module collections
 
+import math
 import memory
 import option { Maybe, noth, some }
 import result { Result, err, ok }
@@ -95,6 +96,19 @@ pub fn (mut v Vec<T>) set(i u32, val T) Result<u8, VecError> {
 		memory.copy<T>(memory.offset<T>(v.data, i), &val, 1)
 	}
 	return ok<u8, VecError>(0)
+}
+
+pub fn (v Vec<T>) slice(params SliceParams) Slice<T> {
+	end := if params.end == 0 {
+		v.len
+	} else {
+		math.min(v.len, params.end)
+	}
+
+	return Slice<T>{
+		data: memory.offset(v.data, params.start)
+		len: end - params.start
+	}
 }
 
 pub fn (v Vec<T>) iter() Iter<T> {
