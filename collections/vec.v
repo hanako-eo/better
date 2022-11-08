@@ -1,5 +1,6 @@
 module collections
 
+import memory
 import option { Maybe, noth, some }
 import result { Result, err, ok }
 
@@ -8,24 +9,23 @@ pub enum VecError {
 }
 
 pub struct Vec<T> {
-	data_size u64
 pub mut:
 	data &T
-	len  u64
-	cap  u64
+	len  u32
+	cap  u32
 }
 
 pub fn new_vector<T>() Vec<T> {
 	return new_vector_with_cap<T>(0)
 }
 
-pub fn new_vector_with_cap<T>(cap u64) Vec<T> {
-	data_size := sizeof(T)
-	return Vec<T>{
-		data_size: data_size
-		data: C.calloc(cap, data_size)
-		len: 0
-		cap: cap
+pub fn new_vector_with_cap<T>(cap u32) Vec<T> {
+	unsafe {
+		return Vec<T>{
+			data: memory.alloc<T>(cap)
+			len: 0
+			cap: cap
+		}
 	}
 }
 
@@ -35,40 +35,64 @@ fn (mut v Vec<T>) resize() {
 	}
 	v.cap *= 2
 	unsafe {
-		v.data = C.realloc(v.data, v.cap * v.data_size)
+		v.data = memory.realloc<T>(v.data, v.cap)
 	}
 }
 
-pub fn (mut v Vec<T>) push(item T) u64 {
-	if v.len == v.cap {
-		v.resize()
+pub fn (mut v Vec<T>) unshift(item T) u32 {
+	return v.insert(0, item)
+}
+
+pub fn (mut v Vec<T>) shift() Maybe<T> {
+	first := v.get(0)
+	if v.len > 0 {
+		v.len--
 	}
-	v.len++
-	v.set(v.len - 1, item)
-	return v.len - 1
+	unsafe {
+		memory.move<T>(memory.offset<T>(v.data, 1), v.data, v.len)
+	}
+	return first
+}
+
+pub fn (mut v Vec<T>) push(item T) u32 {
+	return v.insert(v.len, item)
 }
 
 pub fn (mut v Vec<T>) pop() Maybe<T> {
-	last_element := v.get(v.len - 1)
-	v.len--
-	return last_element
+	last := v.get(v.len - 1)
+	if v.len > 0 {
+		v.len--
+	}
+	return last
 }
 
-pub fn (v Vec<T>) get(i u64) Maybe<T> {
+pub fn (v Vec<T>) get(i u32) Maybe<T> {
 	if i >= v.len {
 		return noth<T>()
 	}
 	unsafe {
-		return some<T>(v.data[i])
+		return some<T>(*memory.offset<T>(v.data, i))
 	}
 }
 
-pub fn (mut v Vec<T>) set(i u64, val T) Result<u8, VecError> {
+pub fn (mut v Vec<T>) insert(i u32, val T) u32 {
+	if v.len == v.cap {
+		v.resize()
+	}
+	unsafe {
+		memory.move<T>(memory.offset<T>(v.data, i), memory.offset<T>(v.data, i + 1), v.len - i)
+	}
+	v.len++
+	v.set(i, val)
+	return i
+}
+
+pub fn (mut v Vec<T>) set(i u32, val T) Result<u8, VecError> {
 	if i >= v.len {
 		return err<u8, VecError>(VecError.out_of_range)
 	}
 	unsafe {
-		v.data[i] = &val
+		memory.copy<T>(memory.offset<T>(v.data, i), &val, 1)
 	}
 	return ok<u8, VecError>(0)
 }

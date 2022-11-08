@@ -13,12 +13,18 @@ pub fn realloc<T>(ptr &T, new_size u64) &T {
 }
 
 [inline; unsafe]
-pub fn copy<T>(ptr &T, bytes_offset u64, from &T, n u64) {
+pub fn move<T>(from &T, to &T, n u64) {
 	sizeof_type := sizeof(T)
-	C.memcpy(offset(ptr, bytes_offset), from, sizeof_type * n)
+	C.memmove(to, from, sizeof_type * n)
 }
 
 [inline; unsafe]
-pub fn set<T>(ptr &T, bytes_offset u64, val T, n u64) {
-	C.memset(offset(ptr, bytes_offset), val, n)
+pub fn copy<T>(ptr &T, from &T, n u64) {
+	sizeof_type := sizeof(T)
+	C.memcpy(ptr, from, sizeof_type * n)
+}
+
+[inline; unsafe]
+pub fn set<T>(ptr &T, val T, n u64) {
+	C.memset(ptr, val, n)
 }

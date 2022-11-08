@@ -3,15 +3,15 @@ module collections
 import option { Maybe }
 
 pub interface Iterable<T> {
-	len u64
-	get(i u64) Maybe<T>
+	len u32
+	get(i u32) Maybe<T>
 }
 
 [manualfree]
 pub struct Iter<T> {
 	iter Iterable<T>
 mut:
-	i u64
+	i u32
 }
 
 pub fn from_iterable<T>(iterable Iterable<T>) Iter<T> {
