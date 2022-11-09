@@ -1,5 +1,7 @@
 module option
 
+import memory
+
 pub struct Noth {}
 
 const noth_c = Noth{}
@@ -45,6 +47,14 @@ pub fn (m Maybe<T>) unwrap<T>() T {
 		return m
 	}
 	panic("can't unwrap Noth value")
+}
+
+[inline]
+pub fn (m Maybe<T>) unwrap_default<T>() T {
+	if m is T {
+		return m
+	}
+	return memory.default<T>()
 }
 
 [inline]

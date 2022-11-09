@@ -37,7 +37,6 @@ pub fn transmute<T, U>(from T) &U {
 	return to
 }
 
-[inline; unsafe]
 pub fn default<T>() T {
 	return T{}
 }
