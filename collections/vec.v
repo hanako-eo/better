@@ -3,7 +3,7 @@ module collections
 import math
 import memory
 import option { Maybe, noth, some }
-import result { Result, err, ok }
+import result { Attempt, fail, success }
 
 pub enum VecError {
 	out_of_range
@@ -20,8 +20,12 @@ pub fn (v Vec<T>) str() string {
 	return str_iter<T>(v, 'Vec<${typeof(*v.data).name}>{', '}')
 }
 
-pub fn new_vector<T>() Vec<T> {
-	return new_vector_with_cap<T>(0)
+pub fn new_vector<T>(args... T) Vec<T> {
+	mut vec := new_vector_with_cap<T>(u32(args.len))
+	for arg in args {
+		vec.push(arg)
+	}
+	return vec
 }
 
 pub fn new_vector_with_cap<T>(cap u32) Vec<T> {
@@ -92,14 +96,14 @@ pub fn (mut v Vec<T>) insert(i u32, val T) u32 {
 	return i
 }
 
-pub fn (mut v Vec<T>) set(i u32, val T) Result<u8, VecError> {
+pub fn (mut v Vec<T>) set(i u32, val T) Attempt<VecError> {
 	if i >= v.len {
-		return err<u8, VecError>(VecError.out_of_range)
+		return fail<VecError>(VecError.out_of_range)
 	}
 	unsafe {
 		memory.copy<T>(memory.offset<T>(v.data, i), &val, 1)
 	}
-	return ok<u8, VecError>(0)
+	return success<VecError>()
 }
 
 pub fn (v Vec<T>) slice(params SliceParams) Slice<T> {
