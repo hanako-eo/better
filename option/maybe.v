@@ -85,15 +85,8 @@ pub fn (m Maybe<T>) and_then<T>(f fn (v T) Maybe<T>) Maybe<T> {
 [inline]
 pub fn (m Maybe<T>) @or<T>(m2 Maybe<T>) Maybe<T> {
 	return match m {
-		Noth {
-			match m2 {
-				Noth { option.noth_c }
-				T { m2 }
-			}
-		}
-		T {
-			m
-		}
+		Noth { m2 }
+		T { m }
 	}
 }
 
@@ -177,6 +170,13 @@ pub fn (m Maybe<T>) clone<T>() Maybe<T> {
 // 		}
 // 	}
 // }
+
+pub fn (m Maybe<T>) inspect<T>(f fn (v T)) Maybe<T> {
+	if m is T {
+		f(m)
+	}
+	return m
+}
 
 [inline; unsafe]
 pub fn (mut m Maybe<T>) redefine<T>(new_maybe Maybe<T>) {

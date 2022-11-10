@@ -139,6 +139,14 @@ pub fn (r Result<T, E>) or_else<T, E>(f fn (v E) Result<T, E>) Result<T, E> {
 // }
 
 /// Utils methods
+[inline]
+pub fn (r Result<T, E>) native<T, E>() !T {
+	return match r {
+		Ok<T> { r }
+		Err<E> { error('Err(${*r.v})') }
+	}
+}
+
 // [inline]
 // pub fn (r Result<&T, E>) clone<T, E>() Result<T, E> {
 // 	return match r {
