@@ -2,6 +2,12 @@ module alloc
 
 import memory
 import option { Maybe, noth, some }
+import result { Attempt, fail, success }
+
+pub enum TupleError {
+	out_of_range
+	wrong_type
+}
 
 interface Any {}
 
@@ -43,6 +49,15 @@ pub fn (t Tuple) is_type<T>(i u32) bool {
 	return t.get<T>(i).is_some()
 }
 
-pub fn (mut t Tuple) pick<T>(mut x T, i u32) {
-	x = t.get(i).unwrap_default()
+pub fn (t Tuple) pick<T>(mut x T, i u32) Attempt<TupleError> {
+	if i >= t.len {
+		return fail<TupleError>(TupleError.out_of_range)
+	}
+
+	value := *memory.offset(t.data, i)
+	if value is T {
+		x = value
+		return success<TupleError>()
+	}
+	return fail<TupleError>(TupleError.wrong_type)
 }
