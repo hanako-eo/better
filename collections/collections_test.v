@@ -24,8 +24,9 @@ fn test_vec() {
 	assert vec.get(1).unwrap() == 3
 
 	vec.shift()
+	vec.delete(2)
 	assert vec.cap == 4
-	assert vec.len == 3
+	assert vec.len == 2
 	assert vec.get(1).is_some()
 	assert vec.get(1).unwrap() == 1
 }

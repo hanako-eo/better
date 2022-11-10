@@ -53,14 +53,7 @@ pub fn (mut v Vec<T>) unshift(item T) u32 {
 }
 
 pub fn (mut v Vec<T>) shift() Maybe<T> {
-	first := v.get(0)
-	if v.len > 0 {
-		v.len--
-	}
-	unsafe {
-		memory.move<T>(memory.offset<T>(v.data, 1), v.data, v.len)
-	}
-	return first
+	return v.delete(0)
 }
 
 pub fn (mut v Vec<T>) push(item T) u32 {
@@ -68,11 +61,7 @@ pub fn (mut v Vec<T>) push(item T) u32 {
 }
 
 pub fn (mut v Vec<T>) pop() Maybe<T> {
-	last := v.get(v.len - 1)
-	if v.len > 0 {
-		v.len--
-	}
-	return last
+	return v.delete(v.len - 1)
 }
 
 pub fn (v Vec<T>) get(i u32) Maybe<T> {
@@ -94,6 +83,17 @@ pub fn (mut v Vec<T>) insert(i u32, val T) u32 {
 	v.len++
 	v.set(i, val)
 	return i
+}
+
+pub fn (mut v Vec<T>) delete(i u32) Maybe<T> {
+	item := v.get(i)
+	if v.len > 0 {
+		v.len--
+	}
+	unsafe {
+		memory.move<T>(memory.offset<T>(v.data, i + 1), memory.offset<T>(v.data, i), v.len - i)
+	}
+	return item
 }
 
 pub fn (mut v Vec<T>) set(i u32, val T) Attempt<VecError> {
