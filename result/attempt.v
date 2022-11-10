@@ -90,7 +90,7 @@ pub fn (a Attempt<E>) or_else<E>(f fn (v E) Attempt<E>) Attempt<E> {
 /// Utils methods
 [inline]
 pub fn (a Attempt<E>) native<E>() ! {
-	if a is Err<E> {
+	if a is E {
 		error('Fail($a)')
 	}
 }
