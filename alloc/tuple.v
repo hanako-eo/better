@@ -38,7 +38,7 @@ pub fn (t Tuple) get<T>(i u32) Maybe<T> {
 		return noth<T>()
 	}
 
-	value := *memory.offset(t.data, i)
+	value := unsafe { *memory.offset(t.data, i) }
 	if value is T {
 		return some<T>(value)
 	}
@@ -54,7 +54,7 @@ pub fn (t Tuple) pick<T>(mut x T, i u32) Attempt<TupleError> {
 		return fail<TupleError>(TupleError.out_of_range)
 	}
 
-	value := *memory.offset(t.data, i)
+	value := unsafe { *memory.offset(t.data, i) }
 	if value is T {
 		x = value
 		return success<TupleError>()

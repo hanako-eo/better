@@ -8,7 +8,9 @@ fn C.ptr_to_bytes(voidptr) &u8
 
 [inline; unsafe]
 pub fn offset<T>(ptr &T, bytes_offset u64) &T {
-	return ptr + bytes_offset
+	unsafe {
+		return ptr + bytes_offset
+	}
 }
 
 [inline; unsafe]

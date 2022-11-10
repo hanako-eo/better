@@ -142,7 +142,7 @@ pub fn (r Result<T, E>) or_else<T, E>(f fn (v E) Result<T, E>) Result<T, E> {
 [inline]
 pub fn (r Result<T, E>) native<T, E>() !T {
 	return match r {
-		Ok<T> { r }
+		Ok<T> { *r.v }
 		Err<E> { error('Err(${*r.v})') }
 	}
 }

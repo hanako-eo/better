@@ -20,7 +20,7 @@ pub fn (v Vec<T>) str() string {
 	return str_iter<T>(v, 'Vec<${typeof(*v.data).name}>{', '}')
 }
 
-pub fn new_vector<T>(args... T) Vec<T> {
+pub fn new_vector<T>(args ...T) Vec<T> {
 	mut vec := new_vector_with_cap<T>(u32(args.len))
 	for arg in args {
 		vec.push(arg)
@@ -114,7 +114,7 @@ pub fn (v Vec<T>) slice(params SliceParams) Slice<T> {
 	}
 
 	return Slice<T>{
-		data: memory.offset(v.data, params.start)
+		data: unsafe { memory.offset(v.data, params.start) }
 		len: end - params.start
 	}
 }
