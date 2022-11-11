@@ -39,6 +39,20 @@ pub fn transmute<T, U>(from T) &U {
 	return to
 }
 
+pub fn count<T>(ptr &T) u32 {
+	mut data := &*ptr
+	mut i := u32(0)
+	for *data != 0 {
+		data = offset(data, 1)
+		i++
+	}
+	return i
+}
+
+pub fn size_of<T>(ptr &T) u32 {
+	return sizeof(T) * count(ptr)
+}
+
 pub fn default<T>() T {
 	return T{}
 }

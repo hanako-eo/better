@@ -12,7 +12,7 @@ pub fn str_iter<T>(iter Iterable<T>, prefix string, suffix string) string {
 	mut i := u32(0)
 	for x := iter.get(i); x.is_some(); x = iter.get(i) {
 		str += '$x.unwrap()'
-		if i < iter.len {
+		if i < iter.len - 1 {
 			str += ', '
 		}
 		i++
