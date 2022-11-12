@@ -20,7 +20,7 @@ pub:
 
 pub fn make_tuple(args ...Any) Tuple {
 	mut tuple := Tuple{
-		data: unsafe { memory.alloc<Any>(u64(args.len)) }
+		data: unsafe { memory.alloc<Any>(u32(args.len)) }
 		len: u32(args.len)
 	}
 

@@ -2,14 +2,16 @@ module memory
 
 import math
 
+#define ptr_sum(ptr, offset) ptr + offset
 #define ptr_to_bytes(ptr) (char*)(&ptr)
 
+fn C.ptr_sum(voidptr, u32) voidptr
 fn C.ptr_to_bytes(voidptr) &u8
 
 [inline; unsafe]
-pub fn offset<T>(ptr &T, bytes_offset u64) &T {
+pub fn offset<T>(ptr &T, bytes_offset u32) &T {
 	unsafe {
-		return ptr + bytes_offset
+		return C.ptr_sum(ptr, bytes_offset)
 	}
 }
 
