@@ -1,4 +1,6 @@
-# better
+# better (DEAD PROJECT)
+
+/!\ This project is dead and have some issue so avoid to used it
 
 A "core" safety implementation for V
 
